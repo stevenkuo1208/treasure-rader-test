@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>實境尋寶雷達 V3</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #051105;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        #radarCanvas {
+            border: 2px solid #00ff00;
+            border-radius: 50%;
+            background-color: rgba(0, 20, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        #info-panel {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 400px;
+            background: rgba(0, 40, 0, 0.7);
+            border: 1px solid #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .status-item {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        #hint {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffcc00;
+            text-align: center;
+            margin-top: 10px;
+            text-shadow: 0 0 5px #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>寶物雷達探測器 V3</h1>
+    <canvas id="radarCanvas" width="320" height="320"></canvas>
+
+    <div id="info-panel">
+        <div class="status-item">系統狀態: <span id="status">初始化中...</span></div>
+        <div class="status-item">目前 GPS 精度: <span id="accuracy">-</span> 公尺</div>
+        <div class="status-item">與寶物距離: <span id="distance">-</span></div>
+        <hr style="border-color: #00ff00;">
+        <div id="hint">等待定位資料...</div>
+    </div>
+
+    <script>
+        // === 設定區（已更新經緯度與50公尺半徑）===
+        const TREASURE_LAT = 23.188632; // 新寶藏緯度
+        const TREASURE_LNG = 120.191912; // 新寶藏經度
+        const TRIGGER_RADIUS = 50;       // 進入雷達圖的觸發半徑（50公尺）
+        const UPDATE_INTERVAL = 10000;   // 每 10 秒更新一次 GPS
+
+        // === 變數宣告 ===
+        const canvas = document.getElementById('radarCanvas');
+        const ctx = canvas.getContext('2d');
+        const centerX = canvas.width / 2;
+        const centerY = canvas
